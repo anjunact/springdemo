@@ -8,7 +8,7 @@ import cc.anjun.springdemo.domain.User;
 public class UserService {
 	public User find() {
 		User u = new User();
-		u.setName("张三");
+		u.setUsername("张三");
 		u.setEmail("A@QQ.COM");
 		return u;
 	}

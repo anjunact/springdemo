@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,15 +20,17 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import cc.anjun.springdemo.domain.User;
 
 @Configuration
 @EnableTransactionManagement
+@EnableWebMvc
 @PropertySource("classpath:jdbc.properties")
 @ComponentScan({ "cc.anjun.springdemo.controller","cc.anjun.springdemo.service","cc.anjun.springdemo.dao"})
-@EnableWebMvc
-public class AppConfig {
+public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Value("${jdbc.url}")
 	private String url;
@@ -54,9 +56,9 @@ public class AppConfig {
 		return new JdbcTemplate(dataSource);
 	}
 	@Bean
-	public DataSourceTransactionManager transactionManager() {
+	public DataSourceTransactionManager transactionManager(DataSource dataSource) {
 	    DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
-		transactionManager.setDataSource(dataSource());
+		transactionManager.setDataSource(dataSource);
 		return transactionManager;
 	}
 	@Bean
@@ -65,6 +67,14 @@ public class AppConfig {
 		resolver.setMaxUploadSize(500000000);
 		return resolver;
 	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+        registry.addResourceHandler("/img/**").addResourceLocations("/img/");
+	}
+	
 //    @Bean
 //    public SessionFactory sessionFactory(DataSource dataSource) {
 //    	LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);

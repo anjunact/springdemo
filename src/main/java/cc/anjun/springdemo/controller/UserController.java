@@ -31,13 +31,18 @@ public class UserController {
 	@Autowired
 	private UserDao userDao;
 
+	@RequestMapping("/login")
+	public String login() {
+		return "/user/login";
+	}
+
 	@RequestMapping("/test")
 	public void userList(Model model) {
 		// User u= userService.find();
 		// model.addAttribute("user",u);
 		// userDao.add(u);
 		User user = userDao.findById(1L);
-		System.out.println(user.getName());
+		System.out.println(user.getUsername());
 		System.out.println(user.getEmail());
 	}
 
@@ -72,7 +77,7 @@ public class UserController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	// public String addUserSubmit(@ModelAttribute User u) {
 	public String addUserSubmit(@ModelAttribute User u, @RequestParam("file") MultipartFile formFile) {
-		System.out.println(u.getName());
+		System.out.println(u.getUsername());
 		System.out.println(u.getAge());
 
 		try {
@@ -85,14 +90,15 @@ public class UserController {
 
 			// Create the file on server
 			File file = new File(filesFolder.getAbsolutePath() + File.separator + formFile.getName());
-			
-			FileOutputStream fi =new FileOutputStream(file);
+
+			FileOutputStream fi = new FileOutputStream(file);
 			fi.write(formFile.getBytes());
 			fi.close();
-			
-//			BufferedOutputStream fileStream = new BufferedOutputStream(new FileOutputStream(file));
-//			fileStream.write(formFile.getBytes());
-//			fileStream.close();
+
+			// BufferedOutputStream fileStream = new BufferedOutputStream(new
+			// FileOutputStream(file));
+			// fileStream.write(formFile.getBytes());
+			// fileStream.close();
 
 			System.out.println(filesFolder.getAbsolutePath() + File.separator + formFile.getName());
 		} catch (Exception e) {
@@ -105,7 +111,7 @@ public class UserController {
 	@ModelAttribute("defaultUser")
 	public User defaultUser() {
 		User user = new User();
-		user.setName("Joe");
+		user.setUsername("Joe");
 		user.setAge(18);
 		return user;
 	}

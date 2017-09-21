@@ -28,7 +28,7 @@ public class UserDao {
 		
 		public void add(User u) {
 			String sql = "insert into t_user (name,password,email)values(?,?,?)";
-			jdbcTemplate.update(sql,u.getName(),u.getPassword(),u.getEmail());
+			jdbcTemplate.update(sql,u.getUsername(),u.getPassword(),u.getEmail());
 		}
 		public User findById(Long id) {
 			String sql = "select * from t_user where id=?";
@@ -42,7 +42,7 @@ public class UserDao {
 			public User mapRow(ResultSet row, int rowNum) throws SQLException {
 				User user = new User();
 				user.setId(row.getLong("id"));
-				user.setName(row.getString("name"));
+				user.setUsername(row.getString("name"));
 				user.setPassword(row.getString("password"));
 				user.setEmail(row.getString("email"));
 				return user;
@@ -73,7 +73,7 @@ public class UserDao {
 					if(u == null) {
 						u = new User();
 						u.setId(id);
-						u.setName(rs.getString("name"));
+						u.setUsername(rs.getString("name"));
 						u.setAge(rs.getInt("age"));
 						userMap.put(id, u);
 					}
@@ -108,7 +108,7 @@ public class UserDao {
 			
 			List<Object[]> userRows = new ArrayList<Object[]>();
 			for (User user : userList) {
-		        userRows.add(new Object[] {user.getName(), user.getAge()});
+		        userRows.add(new Object[] {user.getUsername(), user.getAge()});
 			}
 			
 			jdbcTemplate.batchUpdate(sql, userRows);
@@ -116,7 +116,7 @@ public class UserDao {
 		public void performSeveralQueries() {
 			User user = new User();
 			
-			user.setName("test1");
+			user.setUsername("test1");
 			user.setAge(15);
 			this.add(user);
 			
@@ -124,7 +124,7 @@ public class UserDao {
 				throw new RuntimeException("A runtime exception");			
 			}
 
-			user.setName("test2");
+			user.setUsername("test2");
 			user.setAge(18);
 			this.add(user);
 
